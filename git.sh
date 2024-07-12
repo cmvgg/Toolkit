@@ -1,10 +1,31 @@
-#/bin/bash
+#!/bin/bash
 
-git add .
-echo "Introduce el commit:"
-read COMMIT
-echo -n ""
-DIA=`date +"%d/%m/%Y"`
-HORA=`date +"%H:%M"`
-git commit -m "$COMMIT $DIA--$HORA "
-git push --force
+function selector {
+  echo -e "Introduce el numero de la eleccion:\n 1 introducir commit\n 2 commit por lintern"
+  read ELEC
+
+  git add .
+  if [[ $ELEC == 1 ]]; then
+    echo "Introduce el commit:"
+    read COMMIT
+    DIA=$(date +"%d/%m/%Y")
+    HORA=$(date +"%H:%M")
+    git commit -m "$COMMIT $DIA--$HORA"
+    git push
+  elif [[ $ELEC == 2 ]]; then
+    echo "Revisando el código con ESLint..."
+    eslint . --fix
+    echo "Revisando el código con Prettier..."
+    prettier --write .
+    echo "Realizando commit de las correcciones..."
+    DIA=$(date +"%d/%m/%Y")
+    HORA=$(date +"%H:%M")
+    git commit -m "Correcciones de linting $DIA--$HORA"
+    git push
+  else
+    echo "Opcion invalida"
+  fi
+}
+
+selector
+
