@@ -12,10 +12,16 @@ function mostrar_encabezado {
 }
 
 function mostrar_vulnerabilidad {
-    echo "$1. Vulnerabilidad: $2 ($3)"
-    echo "   - Descripción: $4"
-    echo "   - Recomendación: $5"
-    echo "   - Gravedad: $6"
+    local linea="$1"
+    local num_vulnerabilidad="$2"
+    local archivo="$3"
+    local descripcion="$4"
+    local recomendacion="$5"
+    local gravedad="$6"
+
+    echo "$num_vulnerabilidad. Vulnerabilidad en $archivo ($gravedad)"
+    echo "   - Descripción: $descripcion"
+    echo "   - Recomendación: $recomendacion"
     echo ""
 }
 
@@ -24,10 +30,7 @@ function mostrar_resumen {
     echo "RESUMEN"
     echo "----------------------------------------------------"
     echo ""
-    echo "- Total de Vulnerabilidades Críticas: $1"
-    echo "- Total de Vulnerabilidades Altas: $2"
-    echo "- Total de Vulnerabilidades Medias: $3"
-    echo "- Total de Vulnerabilidades Bajas: $4"
+    echo "- Total de Vulnerabilidades Detectadas: $1"
     echo ""
     echo "----------------------------------------------------"
 }
@@ -42,32 +45,30 @@ fi
 
 CPPCHECK_OPTS="--enable=all --inconclusive --force"
 
-cppcheck $CPPCHECK_OPTS "$PROYECTO_DIR" >> $PROYECTO_DIR/tmp_reporte_cppcheck.txt
+cppcheck $CPPCHECK_OPTS "$PROYECTO_DIR" 2> "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
+
+if [ $? -ne 0 ]; then
+    echo "Error al ejecutar cppcheck. Verifique la configuración y la ruta del proyecto."
+    exit 1
+fi
 
 mostrar_encabezado "MiProyecto en C/C++"
 
-total_criticas=0
-total_altas=0
-total_medias=0
-total_bajas=0
+total_vulnerabilidades=0
 
 while IFS= read -r linea
 do
-    if [[ $linea == *"CRITICAL"* ]]; then
-        mostrar_vulnerabilidad 1 "Desbordamiento de búfer" "(CRITICAL)" "Se encontró un posible desbordamiento de búfer en la función 'process_data' en 'file.c'." "Validar las entradas de usuario y asegurarse de que los límites de los búferes se respeten." "Alta"
-        ((total_criticas++))
-    elif [[ $linea == *"HIGH"* ]]; then
-        mostrar_vulnerabilidad 2 "Uso de memoria no inicializada" "(HIGH)" "Uso de variables no inicializadas en la función 'initialize_data' en 'data.cpp'." "Inicializar todas las variables antes de utilizarlas para evitar comportamientos indefinidos." "Alta"
-        ((total_altas++))
-    elif [[ $linea == *"MEDIUM"* ]]; then
-        mostrar_vulnerabilidad 3 "Uso inseguro de funciones de cadena" "(MEDIUM)" "Uso de funciones de cadena inseguras como 'strcpy' en 'util.c'." "Utilizar funciones seguras como 'strncpy' con un tamaño de búfer especificado." "Media"
-        ((total_medias++))
-    elif [[ $linea == *"LOW"* ]]; then
-        mostrar_vulnerabilidad 4 "Uso de punteros no validados" "(LOW)" "Uso de punteros no validados en la función 'process_data' en 'file.cpp'." "Validar los punteros y asegurar que apunten a memoria válida antes de su uso." "Baja"
-        ((total_bajas++))
+    if [[ $linea == *"warning"* || $linea == *"error"* ]]; then
+        archivo=$(echo "$linea" | cut -d':' -f1)
+        descripcion=$(echo "$linea" | cut -d':' -f3-)
+        recomendacion="Revisar y corregir el problema identificado."
+        gravedad="Alta"  # Se puede determinar la gravedad según el tipo de mensaje (warning/error)
+
+        mostrar_vulnerabilidad "$linea" "$(($total_vulnerabilidades + 1))" "$archivo" "$descripcion" "$recomendacion" "$gravedad"
+        ((total_vulnerabilidades++))
     fi
-done < $PROYECTO_DIR/tmp_reporte_cppcheck.txt
+done < "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
 
-mostrar_resumen $total_criticas $total_altas $total_medias $total_bajas
+mostrar_resumen "$total_vulnerabilidades"
 
-
+rm "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
