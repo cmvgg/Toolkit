@@ -8,4 +8,3 @@ read CARPETA
 echo -n ""
 git clone "$CLONE" "$CARPETA"
 
-
