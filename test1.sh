@@ -26,14 +26,21 @@ function mostrar_vulnerabilidad {
 }
 
 function mostrar_resumen {
+    local total_vulnerabilidades="$1"
+    local total_graves="$2"
+    local total_medias="$3"
+
     echo "----------------------------------------------------"
     echo "RESUMEN"
     echo "----------------------------------------------------"
     echo ""
-    echo "- Total de Vulnerabilidades Detectadas: $1"
+    echo "- Total de Vulnerabilidades Detectadas: $total_vulnerabilidades"
+    echo "  - Vulnerabilidades Graves: $total_graves"
+    echo "  - Vulnerabilidades Medias: $total_medias"
     echo ""
     echo "----------------------------------------------------"
 }
+
 
 echo "Ingrese la ruta absoluta al directorio del proyecto:"
 read PROYECTO_DIR
@@ -42,6 +49,8 @@ if [ ! -d "$PROYECTO_DIR" ]; then
     echo "¡Error! La ruta '$PROYECTO_DIR' no es un directorio válido."
     exit 1
 fi
+
+rm "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
 
 CPPCHECK_OPTS="--enable=all --inconclusive --force"
 
@@ -55,20 +64,43 @@ fi
 mostrar_encabezado "MiProyecto en C/C++"
 
 total_vulnerabilidades=0
+total_graves=0
+total_medias=0
 
 while IFS= read -r linea
 do
-    if [[ $linea == *"warning"* || $linea == *"error"* ]]; then
+    if [[ $linea == *"error"* ]]; then
         archivo=$(echo "$linea" | cut -d':' -f1)
         descripcion=$(echo "$linea" | cut -d':' -f3-)
         recomendacion="Revisar y corregir el problema identificado."
-        gravedad="Alta"  # Se puede determinar la gravedad según el tipo de mensaje (warning/error)
+        gravedad="Alta"
 
         mostrar_vulnerabilidad "$linea" "$(($total_vulnerabilidades + 1))" "$archivo" "$descripcion" "$recomendacion" "$gravedad"
         ((total_vulnerabilidades++))
+        ((total_graves++))
+
+     elif [[ $linea == *"warning"* ]]; then
+	archivo=$(echo "$linea" | cut -d':' -f1)
+	descripcion=$(echo "$linea" | cut -d':' -f3-)
+	recomendacion="Revisar y si es posible y coherente corregir el problema identificado"
+	gravedad="Media o baja" 
+
+        mostrar_vulnerabilidad "$linea" "$(($total_vulnerabilidades + 1))" "$archivo" "$descripcion" "$recomendacion" "$gravedad"
+        ((total_vulnerabilidades++))
+        ((total_medias++))
+
     fi
 done < "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
 
-mostrar_resumen "$total_vulnerabilidades"
+mostrar_resumen "$total_vulnerabilidades" "$total_graves" "$total_medias"
 
-rm "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
+echo "Debo mostrar el archivo con la definicion de las vulnerabilidaes: Y/N"
+read -r vuln
+    if [[ $vuln == "Y" || $vuln == "y" ]]; then
+	cat "$PROYECTO_DIR/tmp_reporte_cppcheck.txt"
+    elif [[ $vuln == "N" || $vuln == "n" ]]; then
+	echo ""
+    elif [[ $vuln != "Y" || $vuln != "n" || $vuln != "N" || $vuln != "n" ]]; then
+	echo "Eleccion erronea"
+
+fi
