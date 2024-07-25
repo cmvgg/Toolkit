@@ -1,13 +1,16 @@
 #!/bin/bash
 
 function selector {
+
   echo -e "Introduce el numero de la eleccion:\n 1 introducir commit\n 2 commit por lintern"
   read ELEC
 
   echo "Generando documentación de cambios..."
+
   git log --pretty=format:"%h - %an, %ar : %s" > CHANGELOG.md
 
   git add .
+
   if [[ $ELEC == 1 ]]; then
     echo "Introduce el commit:"
     read COMMIT
@@ -27,6 +30,7 @@ function selector {
     git push
   else
     echo "Opcion invalida"
+
   fi
 }
 
