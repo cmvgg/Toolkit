@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "//wsl.localhost/Ubuntu/home/cmvgg/1/pentest_toolkit",
-      "program": "//wsl.localhost/Ubuntu/home/cmvgg/1/pentest_toolkit/build/Debug/outDebug",
+      "cwd": "//wsl.localhost/Ubuntu/home/cmvgg/1",
+      "program": "//wsl.localhost/Ubuntu/home/cmvgg/1/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
