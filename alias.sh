@@ -2,13 +2,13 @@
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-ZSHRC="$HOME/.zshrc.pre-oh-my-zsh"
+ZSHRC="$HOME/.zshrc"
 
 ALIAS="
 alias clone='$DIR/clone.sh'
 alias dockerc='$DIR/dockerclean.sh'
 alias dockerp='$DIR/dockerpush.sh'
-alias test='docker run -it --rm -v $(pwd):/proyecto cmvgg/vuln_analisis_tool'
+alias test1='docker run -it --rm -v \$(pwd):/proyecto cmvgg/vuln_analisis_tool'
 alias push='$DIR/git.sh'
 alias rp_git='$DIR/rp_git.sh'
 "

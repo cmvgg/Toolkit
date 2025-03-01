@@ -42,6 +42,9 @@ Esto establecerá los alias correspondientes para los demás scripts incluidos e
 **Descripción:** Cambia el repositorio Git en una carpeta sustituyendo el archivo .git. 
 **Alias:** rp_git
 
+**Descrpción** Lanza un analizador estático de código basado en cppcheck.
+**Alias** test1
+
 ## Uso
 
 Una vez ejecutado alias.sh, puedes utilizar los alias configurados en tu terminal:
