@@ -6,7 +6,7 @@ function selector {
 
 git add .
 
-  CAMBIOS=$(git diff --name-only --cached | grep -v "CHANGELOG.md" | tr '\n' ' ')
+  CAMBIOS=$(git diff --name-only --cached | grep -v "CHANGELOG.md" | grep -v ".gitignore" | tr '\n' ' ')
 
   DIA=$(date +"%d/%m/%Y")
   HORA=$(date +"%H:%M")
