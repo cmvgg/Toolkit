@@ -4,14 +4,9 @@ function selector {
   echo -e "Introduce el número de la elección:\n 1) Introducir commit manualmente\n 2) Commit automático basado en cambios"
   read ELEC
 
-  # Verifica si hay cambios en el repositorio
-  if ! git diff --quiet || ! git diff --staged --quiet; then
-    echo "Generando documentación de cambios..."
-    git log --pretty=format:"%h - %an, %ar : %s" > CHANGELOG.md
-    git add CHANGELOG.md
-  fi
+git add .
 
-  git add .
+  CAMBIOS=$(git diff --name-only --cached | grep -v "CHANGELOG.md" | tr '\n' ' ')
 
   DIA=$(date +"%d/%m/%Y")
   HORA=$(date +"%H:%M")
@@ -22,15 +17,12 @@ function selector {
     git commit -m "$COMMIT [$DIA $HORA]"
     git push
   elif [[ $ELEC == 2 ]]; then
-    # Generar un commit basado en los archivos modificados
-    CAMBIOS=$(git diff --name-only --staged)
-
     if [[ -z "$CAMBIOS" ]]; then
-      echo "No hay cambios para commitear."
-      exit 0
+      COMMIT_MSG="Pequeñas actualizaciones [$DIA $HORA]"
+    else
+      COMMIT_MSG="Actualización de: $CAMBIOS [$DIA $HORA]"
     fi
 
-    COMMIT_MSG="Actualización de: $(echo $CAMBIOS | tr '\n' ' ') [$DIA $HORA]"
     git commit -m "$COMMIT_MSG"
     git push
   else
