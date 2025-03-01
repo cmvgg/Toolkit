@@ -7,7 +7,7 @@
 Para configurar los alias correctamente, ejecuta el script alias.sh:
    ```sh
    chmod +x alias.sh && ./alias.sh
-   
+   ```
 
 Esto establecerá los alias correspondientes para los demás scripts incluidos en este repositorio.
 
@@ -51,6 +51,7 @@ Una vez ejecutado alias.sh, puedes utilizar los alias configurados en tu termina
    dockerp
    push
    rp_git
+   ```
 
 Estos comandos te permitirán ejecutar los scripts de manera más sencilla y rápida.
 
