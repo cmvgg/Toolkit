@@ -7,7 +7,7 @@
 Para configurar los alias correctamente, ejecuta el script alias.sh:
    ```sh
    chmod +x alias.sh && ./alias.sh
-
+   ``
 
 Esto establecerá los alias correspondientes para los demás scripts incluidos en este repositorio.
 
