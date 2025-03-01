@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 echo "Introduce el url de descarga:"
 read CLONE

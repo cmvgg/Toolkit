@@ -1,38 +1,41 @@
 #!/bin/bash
 
 function selector {
-
-  echo -e "Introduce el numero de la eleccion:\n 1 introducir commit\n 2 commit por lintern"
+  echo -e "Introduce el número de la elección:\n 1) Introducir commit manualmente\n 2) Commit automático basado en cambios"
   read ELEC
 
-  echo "Generando documentación de cambios..."
-
-  git log --pretty=format:"%h - %an, %ar : %s" > CHANGELOG.md
+  # Verifica si hay cambios en el repositorio
+  if ! git diff --quiet || ! git diff --staged --quiet; then
+    echo "Generando documentación de cambios..."
+    git log --pretty=format:"%h - %an, %ar : %s" > CHANGELOG.md
+    git add CHANGELOG.md
+  fi
 
   git add .
 
+  DIA=$(date +"%d/%m/%Y")
+  HORA=$(date +"%H:%M")
+
   if [[ $ELEC == 1 ]]; then
-    echo "Introduce el commit:"
+    echo "Introduce el mensaje del commit:"
     read COMMIT
-    DIA=$(date +"%d/%m/%Y")
-    HORA=$(date +"%H:%M")
-    git commit -m "$COMMIT $DIA--$HORA"
+    git commit -m "$COMMIT [$DIA $HORA]"
     git push
   elif [[ $ELEC == 2 ]]; then
-    echo "Revisando el código con ESLint..."
-    eslint . --fix
-    echo "Revisando el código con Prettier..."
-    prettier --write .
-    echo "Realizando commit de las correcciones..."
-    DIA=$(date +"%d/%m/%Y")
-    HORA=$(date +"%H:%M")
-    git commit -m "Correcciones de linting $DIA--$HORA"
+    # Generar un commit basado en los archivos modificados
+    CAMBIOS=$(git diff --name-only --staged)
+
+    if [[ -z "$CAMBIOS" ]]; then
+      echo "No hay cambios para commitear."
+      exit 0
+    fi
+
+    COMMIT_MSG="Actualización de: $(echo $CAMBIOS | tr '\n' ' ') [$DIA $HORA]"
+    git commit -m "$COMMIT_MSG"
     git push
   else
-    echo "Opcion invalida"
-
+    echo "Opción inválida"
   fi
 }
 
 selector
-
