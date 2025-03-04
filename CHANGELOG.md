@@ -1,3 +1,4 @@
+4e165c9 - Cesar Manuel Varela Garcia, 58 seconds ago : Actualización de: git.sh  [04/03/2025 16:30]
 59f262e - Cesar Manuel Varela Garcia, 3 days ago : Actualización de: Readme.md alias.sh tmp_reporte_cppcheck.txt  [01/03/2025 15:15]
 e6b63d7 - Cesar Manuel Varela Garcia, 3 days ago : Actualización de: Readme.md  [01/03/2025 14:03]
 514cdaf - Cesar Manuel Varela Garcia, 3 days ago : Actualización de: Readme.md  [01/03/2025 14:01]
