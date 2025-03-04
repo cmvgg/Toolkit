@@ -3,6 +3,10 @@
 function selector {
   echo -e "Introduce el número de la elección:\n 1) Introducir commit manualmente\n 2) Commit automático basado en cambios"
   read ELEC
+  
+  echo "Generando documentación de cambios..."
+  git log --pretty=format:"%h - %an, %ar : %s" > CHANGELOG.md
+
 
 git add .
 
