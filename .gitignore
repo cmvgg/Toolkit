@@ -1,3 +1,5 @@
 .vscode
 a.out
 test1.sh
+pruebas.sh
+*.txt
