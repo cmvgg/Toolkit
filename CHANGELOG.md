@@ -1,4 +1,5 @@
-aa459ed - Cesar Manuel Varela Garcia, 78 seconds ago : Actualización de: API_key.txt changes_report.txt cppcheck_report.txt lizard_report.txt pruebas.sh  [06/03/2025 10:00]
+8599034 - Cesar Manuel Varela Garcia, 73 seconds ago : Pequeñas actualizaciones [06/03/2025 10:01]
+aa459ed - Cesar Manuel Varela Garcia, 3 minutes ago : Actualización de: API_key.txt changes_report.txt cppcheck_report.txt lizard_report.txt pruebas.sh  [06/03/2025 10:00]
 c69caed - Cesar Manuel Varela Garcia, 2 days ago : Actualización de: tmp_reporte_cppcheck.txt  [04/03/2025 16:31]
 4e165c9 - Cesar Manuel Varela Garcia, 2 days ago : Actualización de: git.sh  [04/03/2025 16:30]
 59f262e - Cesar Manuel Varela Garcia, 5 days ago : Actualización de: Readme.md alias.sh tmp_reporte_cppcheck.txt  [01/03/2025 15:15]
